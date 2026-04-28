@@ -1,0 +1,108 @@
+<div id="app">
+  <!-- Left Sidebar -->
+  <aside id="sidebar">
+    <button id="new-query-btn" class="new-query-btn">+ New Query</button>
+    <div id="sidebar-list"></div>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main-content">
+
+    <!-- Input Section -->
+    <div id="input-section">
+      <h2 id="input-title">Browse Research Assistant</h2>
+      <p class="subtitle">Ask questions about your browsing history and get AI-generated summaries</p>
+      <textarea id="user-input" placeholder="e.g. What was I researching last week about shoes?" rows="4"></textarea>
+      <div id="input-controls">
+        <button id="send-btn" class="primary-btn">Send</button>
+        <button id="cancel-btn" class="secondary-btn hidden">Cancel</button>
+      </div>
+
+      <!-- Technical Details collapsible -->
+      <div id="tech-toggle" class="tech-toggle">
+        <span class="tech-toggle-arrow" id="tech-toggle-arrow">▶</span>
+        <span class="tech-toggle-text">Technical Details</span>
+      </div>
+      <div id="tech-panel" class="tech-panel hidden">
+        <div class="tech-row">
+          <label class="tech-label" for="tech-max-count">Max records per fetch</label>
+          <input type="number" id="tech-max-count" class="tech-input" value="200" min="10" max="500" step="10">
+        </div>
+        <div class="tech-row">
+          <label class="tech-label" for="tech-max-rounds">Max round trips</label>
+          <input type="number" id="tech-max-rounds" class="tech-input" value="2" min="1" max="10">
+        </div>
+        <div class="tech-row" id="tech-provider-row">
+          <label class="tech-label" for="tech-provider">LLM Provider</label>
+          <select id="tech-provider" class="tech-select">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+        <div class="tech-row" id="tech-main-model-row">
+          <div class="tech-label-group">
+            <label class="tech-label" for="tech-main-model">Planning &amp; Page Creation</label>
+            <div class="tech-model-hint">Interprets your query, plans the search, and writes the final HTML summary</div>
+          </div>
+          <select id="tech-main-model" class="tech-select">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+        <div class="tech-row" id="tech-cheap-model-row">
+          <div class="tech-label-group">
+            <label class="tech-label" for="tech-cheap-model">Initial History Parsing</label>
+            <div class="tech-model-hint">Filters browsing records for relevance — runs multiple rounds per collection</div>
+          </div>
+          <select id="tech-cheap-model" class="tech-select">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result-section" class="hidden">
+      <div id="result-header">
+        <h2 id="result-title"></h2>
+        <div class="result-header-actions">
+          <button id="save-btn" class="primary-btn save-result-btn">Save Summary</button>
+        </div>
+      </div>
+
+      <!-- Status bar -->
+      <div id="status-bar" class="hidden">
+        <span id="status-text"></span>
+        <span id="cost-display"></span>
+      </div>
+
+      <!-- Tabs -->
+      <div id="tab-bar">
+        <button id="tab-details-btn" class="tab-btn active" data-tab="details">Query Details</button>
+        <button id="tab-results-btn" class="tab-btn" data-tab="results">Results</button>
+      </div>
+
+      <!-- Details Tab -->
+      <div id="tab-details" class="tab-panel">
+        <div id="details-query-text" class="details-block hidden">
+          <div class="details-label">Question Asked</div>
+          <div id="details-query-value" class="details-value"></div>
+        </div>
+        <div id="details-cost" class="details-block hidden">
+          <div class="details-label">Cost Breakdown</div>
+          <div id="details-cost-value" class="details-value"></div>
+        </div>
+        <div id="details-rounds"></div>
+        <div id="modify-history"></div>
+        <div id="post-result-actions"></div>
+        <div id="publishing-section-container"></div>
+        <div id="change-title-container"></div>
+        <div id="delete-summary-container"></div>
+      </div>
+
+      <!-- Results Tab -->
+      <div id="tab-results" class="tab-panel hidden">
+        <div id="result-container"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
