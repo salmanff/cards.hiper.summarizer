@@ -29,6 +29,9 @@
   font-size: 15px;
   font-family: inherit;
   resize: vertical;
+  min-height: 96px;
+  max-height: 400px;
+  overflow-y: hidden;
   transition: border-color 0.2s;
   background: white;
 }

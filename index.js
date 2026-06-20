@@ -12,8 +12,13 @@ function bindEvents() {
   document.getElementById('sidebar-list').addEventListener('click', handleSidebarClick)
   document.getElementById('details-rounds').addEventListener('click', handleRoundToggleClick)
 
-  document.getElementById('user-input').addEventListener('keydown', function(e) {
+  var userInput = document.getElementById('user-input')
+  userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSend()
+  })
+  userInput.addEventListener('input', function() {
+    this.style.height = 'auto'
+    this.style.height = Math.min(this.scrollHeight, 400) + 'px'
   })
 
   document.getElementById('tab-details').addEventListener('click', handleDetailsTabClick)
