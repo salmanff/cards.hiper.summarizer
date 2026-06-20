@@ -2,62 +2,64 @@
 
 function buildStage1aPrompt(userQuery) {
   var now = new Date()
-  var nowMs = now.getTime()
-  var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
-  var yesterdayStart = todayStart - 86400000
-  var weekAgoStart = todayStart - 7 * 86400000
-  var monthAgoStart = todayStart - 30 * 86400000
   var currentYear = now.getFullYear()
   var currentMonth = now.getMonth() + 1
   var currentDay = now.getDate()
 
-  return `You are a query planner. You will classify a user request and return a JSON object.
+  return `You are a query planner. Classify a user request and return JSON.
 
-## FACTS (pre-computed — do not recalculate, do not adjust)
-TODAY_START_MS   = ${todayStart}
-TODAY_END_MS     = ${nowMs}
-YESTERDAY_START  = ${yesterdayStart}
-YESTERDAY_END    = ${todayStart}
-WEEK_START       = ${weekAgoStart}
-MONTH_START      = ${monthAgoStart}
-NOW              = ${nowMs}
-CURRENT_DATE     = ${currentYear}-${String(currentMonth).padStart(2,'0')}-${String(currentDay).padStart(2,'0')}
+IMPORTANT: You do NOT compute any timestamps or epoch numbers. You ONLY identify the
+date COMPONENTS (year / month / day) the user mentioned. The application code converts
+those components into exact timestamps and infers the correct year — so never guess a year.
+
+## CURRENT DATE
+Today is ${currentYear}-${String(currentMonth).padStart(2,'0')}-${String(currentDay).padStart(2,'0')} (year=${currentYear}, month=${currentMonth}, day=${currentDay}).
 
 ## USER REQUEST
 "${userQuery}"
 
-## TASK
-Choose ONE date rule from the list below that best matches the user request.
-Then copy the exact ms values shown — do NOT compute new numbers.
+## DATE RULES — pick EXACTLY ONE letter
+  A — a specific calendar day (e.g. "March 19", "April 5 2026", "on the 5th", "last Tuesday")
+  B — "today"
+  C — "yesterday" (we still include today as well, just in case)
+  D — "recently" / "lately" / "last week" / "past 7 days" / "this week" — anything that means "the last several days"
+  E — "last month" / "past 30 days" / "this month"
+  F — NO date or time mentioned AT ALL (the request has zero temporal hints)
+  G — a specific month, with or without a year (e.g. "April 2026", "in February", "last April")
+  H — a VAGUE relative period that none of the above fit cleanly (e.g. "a couple of weeks ago",
+      "a few months back", "last year", "earlier this spring", "around the holidays").
+      For rule H you ESTIMATE the window as a number of days ago — see DATE COMPONENTS below.
 
-DATE RULES:
-  RULE A — specific day mentioned (e.g. "March 19", "last Tuesday", "on the 5th"):
-    startTime = midnight of that day as Unix ms
-    endTime   = startTime + 86400000
+Guidance:
+- "recently"/"lately" is rule D (the last ~week), NOT rule F. Rule F is only for requests with no time hint.
+- Prefer the most specific rule that fits. Use H only when the phrase is genuinely fuzzy.
 
-  RULE B — "today":
-    startTime = TODAY_START_MS = ${todayStart}
-    endTime   = TODAY_END_MS   = ${nowMs}
+## DATE COMPONENTS
+Fill in ONLY what the user explicitly stated; use null otherwise:
+  - year:  the 4-digit year ONLY if the user explicitly wrote one (e.g. "2026").
+           If the user did NOT write a year, set null — do NOT guess. The code infers it.
+  - month: 1-12 if a month is named/implied, else null.
+  - day:   1-31 for a specific day, else null.
 
-  RULE C — "yesterday":
-    startTime = YESTERDAY_START = ${yesterdayStart}
-    endTime   = YESTERDAY_END   = ${todayStart}
+For rule H ONLY, also fill in "relative" with your BEST GUESS of the window, in days before today:
+  - daysAgoStart: how many days ago the period BEGINS (the older edge — the larger number).
+  - daysAgoEnd:   how many days ago the period ENDS (the more recent edge; use 0 for "up to now").
+  Make a sensible, generous estimate so we don't miss results.
+  For all other rules set "relative" to null.
 
-  RULE D — "last week" / "past 7 days" / "this week":
-    startTime = WEEK_START = ${weekAgoStart}
-    endTime   = NOW        = ${nowMs}
-
-  RULE E — "last month" / "past 30 days" / "this month":
-    startTime = MONTH_START = ${monthAgoStart}
-    endTime   = NOW         = ${nowMs}
-
-  RULE F — "recently" / "lately" / no date mentioned:
-    startTime = YESTERDAY_START = ${yesterdayStart}
-    endTime   = null
-
-  RULE G — specific month name (e.g. "in February", "during March"):
-    startTime = first ms of that month (midnight on the 1st)
-    endTime   = first ms of the following month
+EXAMPLES:
+  "April 2026"          -> rule G, year 2026, month 4,  day null, relative null
+  "last April"          -> rule G, year null, month 4,  day null, relative null
+  "in February"         -> rule G, year null, month 2,  day null, relative null
+  "March 19 2025"       -> rule A, year 2025, month 3,  day 19,   relative null
+  "on the 5th"          -> rule A, year null, month null, day 5,  relative null
+  "yesterday"           -> rule C, ..., relative null
+  "last week"           -> rule D, ..., relative null
+  "recently"            -> rule D, ..., relative null
+  "shoes I saw"         -> rule F, ..., relative null
+  "a couple of weeks ago" -> rule H, date all null, relative { daysAgoStart: 21, daysAgoEnd: 7 }
+  "a few months back"   -> rule H, date all null, relative { daysAgoStart: 150, daysAgoEnd: 60 }
+  "last year"           -> rule H, date all null, relative { daysAgoStart: 730, daysAgoEnd: 0 }
 
 ## COLLECTION RULES
 - "logs"  → browsing history, pages visited, time spent
@@ -68,15 +70,12 @@ DATE RULES:
 Only set keyword if the user names a specific brand, website, or person.
 Leave null for general topics or concepts.
 
-## OUTPUT
-Reply with ONLY valid JSON. No explanation, no markdown, no extra text.
+## OUTPUT — valid JSON only. No explanation, no markdown, no extra text.
 {
-  "rule": "<A|B|C|D|E|F|G>",
+  "rule": "<A|B|C|D|E|F|G|H>",
   "collections": ["logs"] | ["marks"] | ["logs","marks"],
-  "suggestedDates": {
-    "startTime": <number | null>,
-    "endTime": <number | null>
-  },
+  "date": { "year": <number | null>, "month": <number | null>, "day": <number | null> },
+  "relative": { "daysAgoStart": <number>, "daysAgoEnd": <number> } | null,
   "keyword": <string | null>
 }`
 }

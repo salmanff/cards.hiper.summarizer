@@ -1,0 +1,167 @@
+/* ============================================
+   INPUT SECTION
+   ============================================ */
+
+#input-section {
+  padding: 36px 40px;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#input-title {
+  margin: 0 0 6px 0;
+  font-size: 24px;
+  color: #1a1a2e;
+}
+
+.subtitle {
+  margin: 0 0 24px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+#user-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+  background: white;
+}
+
+#user-input:focus {
+  outline: none;
+  border-color: #3b5bdb;
+}
+
+#input-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ============================================
+   TECHNICAL DETAILS PANEL
+   ============================================ */
+
+.tech-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  cursor: pointer;
+  user-select: none;
+  width: fit-content;
+}
+
+.tech-toggle-arrow {
+  font-size: 9px;
+  color: #adb5bd;
+  transition: transform 0.2s;
+  display: inline-block;
+  line-height: 1;
+}
+
+.tech-toggle-arrow.open {
+  transform: rotate(90deg);
+}
+
+.tech-toggle-text {
+  font-size: 12px;
+  color: #adb5bd;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.tech-toggle:hover .tech-toggle-text,
+.tech-toggle:hover .tech-toggle-arrow {
+  color: #868e96;
+}
+
+.tech-panel {
+  margin-top: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tech-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tech-label {
+  font-size: 12px;
+  color: #868e96;
+  font-weight: 500;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+.tech-input {
+  width: 80px;
+  padding: 5px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #343a40;
+  background: white;
+  text-align: right;
+}
+
+.tech-input:focus {
+  outline: none;
+  border-color: #3b5bdb;
+}
+
+.tech-select {
+  padding: 5px 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #343a40;
+  background: white;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+.tech-select:focus {
+  outline: none;
+  border-color: #3b5bdb;
+}
+
+.tech-model-info {
+  font-size: 11px;
+  color: #adb5bd;
+  font-style: italic;
+  padding-top: 2px;
+}
+
+.tech-label-group {
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+.tech-label-group .tech-label {
+  min-width: unset;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.tech-model-hint {
+  font-size: 10px;
+  color: #adb5bd;
+  font-style: italic;
+  line-height: 1.4;
+}

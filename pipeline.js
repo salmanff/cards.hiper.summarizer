@@ -128,9 +128,14 @@ async function runPipeline(userQuery) {
   plannedCollections = plannedCollections.filter(function(c) { return COLLECTION_MAP[c] })
   if (plannedCollections.length === 0) plannedCollections = ['logs', 'marks']
 
-  state.suggestedDates = queryPlan.suggestedDates || { startTime: null, endTime: null }
+  state.suggestedDates = computeDatesFromPlan(queryPlan)
 
-  console.log('[1a] Collections:', plannedCollections, '| Dates:', state.suggestedDates, '| Keyword:', queryPlan.keyword)
+  console.log('[1a] Collections:', plannedCollections,
+    '| Rule:', queryPlan.rule, '| Components:', JSON.stringify(queryPlan.date),
+    '| Computed dates:', JSON.stringify(state.suggestedDates),
+    '(' + (state.suggestedDates.startTime ? new Date(state.suggestedDates.startTime).toISOString() : 'null') +
+    ' → ' + (state.suggestedDates.endTime ? new Date(state.suggestedDates.endTime).toISOString() : 'null') + ')',
+    '| Keyword:', queryPlan.keyword)
 
   var nextRound = 1
   for (var ci = 0; ci < plannedCollections.length; ci++) {

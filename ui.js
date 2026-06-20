@@ -239,7 +239,7 @@ function renderRounds() {
         html += '</div>'
 
         html += '<div class="query-filter-label">Query</div>'
-        html += '<div class="query-filter-code">' + escapeHtml(JSON.stringify(queryObj, null, 2)) + '</div>'
+        html += '<div class="query-filter-code">' + escapeHtml(formatQueryDisplay(queryObj)) + '</div>'
 
         html += '<div class="round-stats-row">'
         html += '<span class="round-stat"><strong>' + (cd.fetched || 0) + '</strong> fetched</span>'

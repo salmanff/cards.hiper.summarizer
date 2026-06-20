@@ -89,7 +89,13 @@
     "index": {
       "html_file": "index.html",
       "css_files": [
-        "index.css"
+        "css/base.css",
+        "css/sidebar.css",
+        "css/input.css",
+        "css/result.css",
+        "css/details.css",
+        "css/buttons.css",
+        "css/responsive.css"
       ],
       "script_files": [
         "state.js",
@@ -137,8 +143,32 @@
       "description": "Main page HTML — sidebar, input section, result header, tabs, and post-result action areas."
     },
     {
-      "path": "index.css",
-      "description": "All styles including sidebar, tabs, round cards, and published versions section."
+      "path": "css/base.css",
+      "description": "Global reset, body/#app layout, main-content, blink keyframe, and the .hidden utility."
+    },
+    {
+      "path": "css/sidebar.css",
+      "description": "Left sidebar styles including the new-query button and saved-summary list items."
+    },
+    {
+      "path": "css/input.css",
+      "description": "Query input section styles and the collapsible technical-details/model panel."
+    },
+    {
+      "path": "css/result.css",
+      "description": "Result header, published-versions section, status bar, and tab bar styles."
+    },
+    {
+      "path": "css/details.css",
+      "description": "Details tab styles: round cards, per-collection sections, query display, cost table, results container, and post-result actions."
+    },
+    {
+      "path": "css/buttons.css",
+      "description": "Shared primary and secondary button styles."
+    },
+    {
+      "path": "css/responsive.css",
+      "description": "Mobile responsive overrides loaded last to win the cascade."
     },
     {
       "path": "state.js",
